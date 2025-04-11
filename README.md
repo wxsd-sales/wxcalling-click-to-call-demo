@@ -19,7 +19,7 @@ A Webapp to demo Guest Calling with Webex.
 ### 1. Setting up a Webex Service App
 
 * a. [Create a new Webex Service App](https://developer.webex.com/my-apps/new)
-  * i. You can give it any name ("Guest Calling Service App" - Will only appear in Control Hub).
+  * You can give it any name ("Guest Calling Service App" - Will only appear in Control Hub).
 * b. The Scopes selected must be:
   * ```spark:calls_read```
   * ```spark:calls_write```
