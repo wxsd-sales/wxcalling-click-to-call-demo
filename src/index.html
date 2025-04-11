@@ -1,0 +1,966 @@
+<html>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <style>
+    html {
+      background-color: black;
+      overflow: hidden;
+    }
+    
+    .container {
+      height: 100%;
+      position: relative;
+    }
+
+    #bottom-div {
+      position: absolute;
+      bottom:0;
+      width:100%;
+    }
+
+    .button-mod {
+      border:0;
+      color: white;
+      font-size: 36px;
+    }
+
+    .circle-button {
+      border-radius: 50%;
+      border-width: 0;
+      display: inline-block;
+    }
+
+    /* For Desktops */
+    /* @media screen and (min-width: 780px) { */
+    /* For Tablets */
+    /* @media screen and (min-width: 540px) and (max-width: 780px) { */
+    /* For Mobile */
+    /* @media screen and (max-width: 540px) { */
+      .button-size {
+        padding: 0.5rem;
+        margin-right: 0.25rem;
+        margin-left: 0.25rem;
+        width:60px;
+        height:60px;
+      }
+
+      .button-img {
+        width: 30px;
+      }
+    /* } */
+
+    
+    .button-div {
+      max-width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom:1.5rem;
+      margin-top:1.5rem;
+    }
+
+
+    .green {
+      background-color: #1d805f;
+    }
+
+    .grey {
+      background-color: grey;
+    }
+
+    .blue {
+      background-color: #064157;
+    }
+
+    .red {
+      background-color: #ff5c4a;
+    }
+
+    /* .meeting-div {
+      height: 332px;
+    }
+
+    .self-view {
+      max-height: 100px;
+    }
+
+    .remote-parent-div {
+      height:300px;
+      width: 533.3px;
+    }
+
+    .remote-video {
+      height: 300px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: -75px;
+      position: relative;
+      z-index: -1;
+    }
+
+    video {
+      border-radius: 5px;
+    } */
+    #call-span {
+      position:absolute;
+      top:10%;
+      width:100%;
+      text-align: center;
+      color:white;
+      font-family: Helvetica;
+      font-size: 24px;
+      padding:30px;
+    }
+
+    #logo {
+      position: absolute;
+      top:30%;
+      left:50%;
+      transform: translateX(-50%);
+      width:256px;
+    }
+
+    .loading-icon {
+      width: 30px;
+      left: 50%;
+      top:50%;
+      position: absolute;
+      transform: translate(-50%, -50%);
+    }
+
+    .text-span {
+      text-align:center;
+      display:block;
+      margin-bottom:.5rem;
+      color: white;
+      font-size: 36px;
+      min-height: 54px;
+    }
+
+    /* .button{
+      display: block;
+      border-radius: 5px;
+      background: #064157;
+      color: white;
+      padding: 4px;
+      margin-top: 10px;
+      width: 100%;
+      border: none;
+      transition:.3s;
+    } */
+
+    button:disabled,
+    button[disabled]{
+      background-color: #cccccc;
+      color: #666666;
+    }
+
+    /* .button:hover:enabled{
+      color:#fff;
+      background-color:#007AA3;
+      cursor: pointer;
+    } */
+    
+    /* input{
+      border-top: none;
+      border-right: none;
+      border-left: none;
+      border-color: #DDDDDD;
+      border-width: 1.5px;
+      color: #005E7D
+    } */
+
+    *:focus {
+      outline: none;
+    }
+
+    /* legend {
+      color: #064157;
+    } */
+
+    .circle-button:hover:enabled{
+      background-image: linear-gradient(rgba(0, 0, 0, 0.2) 0 0);
+      cursor: pointer;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="container" id="mainContainer">
+      <div>
+      </div>
+      <span id="call-span"></span>
+      <img id="loading-icon" src="/img/loading-2.gif" class="loading-icon"/>
+      <img id="logo" src="/img/webex.png" style="display:none;"/>
+      <div id="bottom-div">
+        <div id="call-content" style="display:none;">
+          <div id="active-call">
+            <div class="meeting-div">
+              <!-- <video id="self-view" class="self-view" muted autoplay></video> -->
+              <div class="remote-parent-div">
+                <audio id="remote-audio" autoplay></audio>
+                <!--<video id="remote-view-video" class="remote-video" autoplay style="display:none;"></video>-->
+              </div>
+            </div>
+          </div>
+          <!-- <input class="" type="text" id="call-input" placeholder="Destination"></input><br> -->
+          <span id="clock-span" class="text-span"></span>
+          <span id="result-span" class="text-span"></span>
+          <div class="button-div">
+            <button id="call-button" class="circle-button button-size green" type="button" title="Call" alt="make call" style="display:none;">
+              <span>
+                <img class="button-img" src="/img/phone-call-white.png"></img>
+              </span>
+            </button>
+            <button id="microphone-toggle" class="circle-button button-size call-control grey" type="button" title="Toggle Microphone" alt="toggle microphone" style="display:none;">
+              <span>
+                <img id="microphone-on-img" class="button-img" src="/img/microphone.png"></img>
+                <img id="microphone-off-img" class="button-img" src="/img/microphone-muted.png" style="display:none;"></img>
+              </span>
+            </button>
+            <!--<button id="camera-toggle" class="circle-button button-size call-control" type="button" title="Toggle Camera" alt="toggle camera" style="display:none;">
+              <span>
+                <img id="camera-on-img" class="button-img" src="/img/camera.png"></img>
+                <img id="camera-off-img" class="button-img" src="/img/camera-muted.png" style="display:none;"></img>
+              </span>
+            </button>-->
+            <button id="hangup" class="circle-button button-size red call-control" type="button" title="Hangup" alt="hangup" style="display:none;">
+              <span>
+                <img class="button-img" src="/img/cancel.png"></img>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script src='https://unpkg.com/webex/umd/calling.min.js'></script>
+    <script type="text/javascript">
+
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+
+const guestName     = urlParams.get('name') == null ? "" : urlParams.get('name');
+const guestSubject  = urlParams.get('subject') == null ? "" : urlParams.get('subject');
+const qDestination  = urlParams.get('destination');
+const qAuto         = String(urlParams.get('auto')).toLowerCase() === "true";
+const qLogo         = urlParams.get('logo');
+
+if(qLogo){
+  document.getElementById("logo").src = qLogo;
+}
+
+//TODO: Beautify
+//    5. Ringing/Connected text as well as remote name text should be white and bulma fonted?
+
+
+// var agentDetails;
+// var microphoneStream;
+// var cameraStream;
+var activeCallInterval;
+var resetCallTimeout;
+//var ringingCallTimeout;
+// let currentMeeting;
+// let currentMeetingAccepted = false;
+// let currentUserId;
+// let currentUserSDKId;
+let callingClient;
+let line;
+let call;
+let localAudioStream;
+
+// let accessToken = "NmNlMTkzMGEtMzY4OS00NTQwLWFhN2UtMmE4OGM4YTI0OTc3ZTExYzFkN2EtZTMw_P0A1_1ebf1b9c-4648-4d25-af89-b8daf52458bd";
+
+function getWebexConfig(accessToken){
+  return webexConfig = {
+    config: {
+      logger: {
+        level: 'debug'
+      },
+      meetings: {
+        reconnection: {
+          enabled: true
+        },
+        enableRtx: true
+      },
+      encryption: {
+        kmsInitialTimeout: 8000,
+        kmsMaxTimeout: 40000,
+        batcherMaxCalls: 30,
+        caroots: null
+      },
+      dss: {}
+    },
+    credentials: {
+      access_token: accessToken
+    }
+  };
+}
+
+function getCallingConfig(guestName, JWE){
+  return callingConfig = {
+    clientConfig: {
+      calling: true,
+      contact: true,
+      callHistory: true,
+      callSettings: true,
+      voicemail: true
+    },
+    callingClientConfig: {
+      logger: {
+        level: 'info'
+      },
+      serviceData:{
+        indicator: `guestcalling`,
+        guestName: guestName
+      },
+      jwe: JWE,
+    },
+    logger: {
+      level: 'info'
+    }
+  };
+}
+
+
+function customLog(msg, args){
+  let logName = "custom-log:"
+  if(args){
+    console.log(logName+ msg, args);  
+  } else {
+    console.log(logName, msg);
+  }
+}
+
+function updateResultSpan(text, color){
+  if(!text){
+    text = "";
+  } else {
+    customLog(`updateResultSpan text:${text}`);
+  }
+  document.getElementById("result-span").innerText = text;
+  if(!color){
+    color = "white";
+  }
+  document.getElementById("result-span").style.color = color;
+}
+
+
+function showLoadingIcon(message, color){
+  updateResultSpan(message, color);
+  //document.getElementById("call-content").style.display = "none";
+  document.getElementById("loading-icon").style.display = "block";
+}
+
+function showLoadError(message, color){
+  updateResultSpan(message, color);
+  document.getElementById("call-content").style.display = "none";
+  document.getElementById("loading-icon").style.display = "none";
+}
+
+function showCallReady(isAuto, message, color){
+  try{
+    updateResultSpan(message, color);
+    document.getElementById("call-span").innerText = "";
+    document.getElementById("clock-span").innerText = "";
+    document.getElementById("call-content").style.display = "block";
+    if(!isAuto){
+      document.getElementById("loading-icon").style.display = "none";
+      document.getElementById("call-button").style.display = "inline-block";
+    }
+    document.querySelectorAll(".call-control").forEach( i => {
+      i.style.display = "none";
+    })
+  }catch(e){
+    customLog("showCallReady error:");
+    customLog(e);
+  }
+}
+
+function showCallActive(){
+  try{
+    if(qAuto){
+      updateResultSpan("");
+    }
+    document.getElementById("loading-icon").style.display = "none";
+    //document.getElementById("call-span").innerText = "Ringing...";
+    document.getElementById("call-button").style.display = "none";
+    document.querySelectorAll(".call-control").forEach( i => {
+      i.style.display = "inline";
+    })
+    // document.getElementById("loading-icon").style.display = "none";
+    // document.getElementById("call-content").style.display = "block";
+  }catch(e){
+    customLog("showCallActive error:");
+    customLog(e);
+  }
+}
+
+function resetCall(){
+  customLog("timeout after call")
+  try{
+    document.getElementById("call-button").disabled = false;
+    resetCallTimeout = setTimeout(function(){
+      updateResultSpan();
+    },5000);
+  } catch(e){
+    customLog("resetCall Failure:");
+    customLog(e);
+  }
+}
+
+function startResetCallTimeout(){
+  clearTimeout(resetCallTimeout);
+  setTimeout(function(){
+    resetCall()
+  }, 1000);
+}
+
+function muteToggle(toggleVar){
+  if(toggleVar){
+    document.querySelector("#microphone-toggle").classList.add('red');
+    document.querySelector("#microphone-toggle").classList.remove('grey');
+    document.getElementById("microphone-on-img").style.display = "none";
+    document.getElementById("microphone-off-img").style.display = "inherit";
+  } else {
+    document.querySelector("#microphone-toggle").classList.add('grey');
+    document.querySelector("#microphone-toggle").classList.remove('red');
+    document.getElementById("microphone-off-img").style.display = "none";
+    document.getElementById("microphone-on-img").style.display = "inherit";
+  }
+}
+
+function callEnded(){
+  clearInterval(activeCallInterval);
+  clearTimeout(resetCallTimeout);
+  try{
+    localAudioStream.stop();
+  }catch(e){
+    customLog("localAudioStream.stop() Exception:");
+    customLog(e);
+  }
+  showCallReady();
+}
+
+function startClock(){
+  let startTime = new Date();
+  activeCallInterval = setInterval(function(){
+    let currentTime = new Date();
+    let timeDifference = Math.floor((currentTime.getTime() - startTime.getTime())/1000);
+    let minutes = Math.floor(timeDifference/60)%60;
+    let hours = Math.floor(timeDifference/60/60);
+    let seconds = timeDifference%60;
+    let stringMins = minutes.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
+    let stringSecs = seconds.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
+    let timeString = `${stringMins}:${stringSecs}`;
+    if(hours > 0){
+      let stringHours = hours.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
+      timeString = `${stringHours}:${timeString}`;
+    }
+    document.getElementById("clock-span").innerText = timeString;
+  },200);
+}
+
+async function makeCall(){
+  try{
+      localAudioStream = await Calling.createMicrophoneStream({ audio: true });
+      call = line.makeCall();
+      //Note:Below is how to do it for a licensed user that can call anywhere.
+      // call = line.makeCall({
+      //   type: 'uri',
+      //   address: destination
+      // });
+
+      call.on('progress', (correlationId) => {
+        customLog('Call is ringing at the remote end');
+        startClock();
+        showCallActive();
+      });
+
+      call.on('connect', (correlationId) => {
+        customLog('Call has been answered');
+      });
+
+      call.on('established', (correlationId) => {
+        customLog('Call is now established. Media flows both ways');
+        customLog(call.callerInfo);
+        if(call.callerInfo.name){
+          document.getElementById("call-span").innerText = call.callerInfo.name;
+        }
+        // if(call.callerInfo.name){
+        //   if(call.callerInfo.name.toLowerCase().indexOf("queue") >= 0){
+        //     document.getElementById("call-span").innerText = `Waiting in ${call.callerInfo.name}`;
+        //   } else {
+        //     document.getElementById("call-span").innerText = `Connected to ${call.callerInfo.name}`;
+        //   }
+        // }
+      });
+
+      call.on('disconnect', (correlationId) => {
+        customLog('Call has been disconnected');
+        callEnded();
+      });
+
+      call.on('remote_media', (track) => {
+        // Remote media information received from the SDK. This is relayed to the
+        // application using the remote_media event
+        document.getElementById('remote-audio').srcObject = new MediaStream([track]);
+      });
+
+      localAudioStream.on('system-mute-state-change', (systemMuted) => {
+        call.mute(localAudioStream, 'system_mute');
+        customLog('systemMuted:', systemMuted);
+        customLog('!localAudioStream.userMuted:', !localAudioStream.userMuted);
+        if (!localAudioStream.userMuted) {
+          muteToggle(systemMuted);
+        }
+      });
+
+      localAudioStream.on('user-mute-state-change', (userMuted) => {
+        customLog('userMuted:', userMuted);
+        muteToggle(userMuted);
+      }); 
+      await call.dial(localAudioStream);
+  } catch(e){
+    customLog("makeCall Failure:");
+    customLog(e);
+    updateResultSpan("Call failed.", "red");
+  }
+  startResetCallTimeout();
+}
+
+document.getElementById("call-button").addEventListener("click", e => {
+  customLog(document.getElementById("call-button"))
+  document.getElementById("call-button").disabled = true;
+  showLoadingIcon();
+  //let destination = document.getElementById("call-input").value.replaceAll(" ","");
+  makeCall();
+});
+
+document.getElementById('hangup').addEventListener('click', async() => {
+  document.getElementById("hangup").disabled = true;
+  try{
+    call.end();
+  }catch(e){
+    customLog("call.end() Exception:");
+    customLog(e);
+  }
+  callEnded();
+  document.getElementById("hangup").disabled = false;
+});
+
+document.getElementById("microphone-toggle").addEventListener("click", e => {
+  customLog(document.getElementById("microphone-toggle"));
+  try{
+    call.mute(localAudioStream, 'user_mute');
+  }catch(e){
+    customLog("microphone-toggle error:");
+    customLog(e);
+  }
+});
+
+document.addEventListener("DOMContentLoaded", async () => {
+  document.getElementById("logo").style.display = "block";
+  let guestUser = Cookies.get("guest");
+  let genToken = true;
+  if(guestUser){
+    guestUser = JSON.parse(guestUser);
+    if(Object.keys(guestUser.user).length > 0 && guestUser.name === guestName && guestUser.subject === guestSubject){
+      genToken = false;
+      customLog("guestUser matching requirements already exists:");
+      customLog(guestUser);
+    }
+  }
+  if(genToken){
+    let url = `/guest?name=${guestName}&subject=${guestSubject}`;
+    if(qDestination){
+      url += `&destination=${qDestination}`;
+    }
+    let resp = await fetch(url, {
+      method: 'GET',
+      headers: {'Content-Type': 'application/json'},
+    });
+    customLog('/guest resp');
+    let jresp = await resp.json()
+    customLog(jresp);
+    guestUser = {user: jresp, name:guestName, subject:guestSubject};
+    customLog("New guestUser:");
+    customLog(guestUser);
+    // 1/24 is 1 hours, 1/48 is 30 minutes, 1/96 is 15 minutes
+    Cookies.set("guest", JSON.stringify(guestUser), { expires: 1/96 });
+  }
+  
+  const calling = await Calling.init({ webexConfig:getWebexConfig(guestUser.user.accessToken), 
+                                       callingConfig:getCallingConfig(guestUser.name, guestUser.user.callToken) });
+  calling.on('ready', () => {
+    customLog("Calling Ready");
+    calling.register().then(() => {
+      customLog("Calling Registered");
+      try{
+        callingClient = calling.callingClient;
+        line = Object.values(callingClient.getLines())[0];
+        line.on('registered', (lineInfo) => {
+          customLog('Line information: ', lineInfo);
+          showCallReady(qAuto);
+          if(qAuto){
+            makeCall();
+          }
+        });
+        line.register();
+      }catch(e){
+        showLoadError("Line registration error.");
+        customLog("Line register error:");
+        customLog(e);
+      }
+    });
+  });
+})
+
+// document.getElementById("camera-toggle").addEventListener("click", e => {
+//   customLog(document.getElementById("camera-toggle"))
+//   try{
+//     if (cameraStream) {
+//       const newMuteValue = !cameraStream.userMuted;
+//       cameraStream.setUserMuted(newMuteValue);
+//       customLog(`MeetingControls#toggleSendVideo() :: Successfully ${newMuteValue ? 'muted': 'unmuted'} video!`);
+//       if(newMuteValue){
+//         document.querySelector("#camera-toggle").classList.add('red');
+//         document.getElementById("camera-on-img").style.display = "none";
+//         document.getElementById("camera-off-img").style.display = "inherit";
+//       } else {
+//         document.querySelector("#camera-toggle").classList.remove('red');
+//         document.getElementById("camera-off-img").style.display = "none";
+//         document.getElementById("camera-on-img").style.display = "inherit";
+//       }
+//     }
+//   }catch(e){
+//     customLog("camera-toggle error:");
+//     customLog(e);
+//   }
+// });
+
+// async function sendCommandMessage(command, inviteeType, inviteeValue, data){
+//   let payload = {
+//     command: command,
+//     from: agentDetails.emails[0]
+//   }
+//   if(data){
+//     payload.data = data;
+//   }
+//   payload[inviteeType] = inviteeValue;
+//   customLog('sendCommandMessage payload:');
+//   customLog(payload);
+//   let resp = await fetch(`/message`, {
+//     method: 'POST',
+//     headers: {
+//         'Content-Type': 'application/json'
+//     },
+//     body: JSON.stringify(payload)
+//   });
+//   return resp;
+// }
+
+// function admitMember(meeting, delta){
+//   for(let added of delta){
+//       customLog("admitMember added:");
+//       customLog(added);
+//       if(added.status == "IN_LOBBY"){
+//           customLog("admitMember() - user in lobby.");
+//           customLog(`admitMember() name - ${added.name}`);
+//           customLog(`currentUserSDKId:${currentUserSDKId}`);
+//           customLog(`memberId:${added.participant.person.id}`);
+//           //Only allow invited user in.
+//           if(added.participant.person.id === currentUserSDKId){
+//             customLog('admitMember() - admitting this user');
+//             if(currentMeeting && !currentMeetingAccepted){
+//               customLog('user admitted so auto accepting the meeting.');
+//               clearTimeout(ringingCallTimeout);
+//               currentMeetingAccepted = true;
+//             }
+//             document.getElementById("call-span").innerText = `Connected to ${added.name}`;
+//             document.getElementById("remote-view-video").style.display = 'block';
+//             meeting.admit(added.id).then((res) => {
+//                 customLog('admitMember() - user admitted');
+//             }).catch((e)=>{
+//                 customLog('admitMember() - error, user not admitted:', e);
+//             });
+//           } else {
+//             customLog('admitMember() added.participant.person.id does not match expected. Not admitting.');
+//           }
+//       }
+//   }
+// }
+
+// function listenForGuestJoin(meeting){
+//   customLog(`listening to member changes for meeting:`, meeting);
+//   meeting.members.on('members:update', (payload) => {
+//       try{
+//           customLog("<members:update> payload:", payload);
+//           customLog("meetingState:", meeting.state);
+//           if(["JOINED", "ACTIVE", undefined].indexOf(meeting.state) >= 0){
+//             admitMember(meeting, payload.delta.added);
+//             admitMember(meeting, payload.delta.updated);
+//           } else {
+//             customLog(meeting.state);
+//             customLog(meeting);
+//           }
+//       } catch (e){
+//           customLog('members.on(members:update) - error:', e);
+//       }
+//   });
+//   customLog("meeting members listener initialized.")
+// }
+
+// function bindMeetingEvents(meeting) {
+//   meeting.on('error', (err) => {
+//     customLog("meeting.on error:");
+//     customLog(err);
+//   });
+
+//   // Handle media streams changes to ready state
+//   meeting.on('media:ready', (media) => {
+//     if (!media) {
+//       return;
+//     }
+    
+//     customLog('media:ready:');
+//     customLog(media);
+
+//     if (media.type === 'remoteVideo') {
+//       document.getElementById('remote-view-video').srcObject = media.stream;
+//     }
+
+//     if (media.type === 'remoteAudio') {
+//       document.getElementById('remote-view-audio').srcObject = media.stream;
+//     }
+//   });
+
+//   // Handle media streams stopping
+//   meeting.on('media:stopped', (media) => {
+//     // Remove media streams
+//     customLog('media:stopped:');
+//     customLog(media);
+//     if (media.type === 'remoteVideo') {
+//       document.getElementById('remote-view-video').srcObject = null;
+//     }
+//     if (media.type === 'remoteAudio') {
+//       document.getElementById('remote-view-audio').srcObject = null;
+//     }
+//   });
+
+//   //Handle Guests joining the meeting
+//   listenForGuestJoin(meeting);
+// }
+
+// Join the meeting and add media through joinWithMedia method.
+// async function joinMeeting(meeting) {
+//   microphoneStream = await webexService.meetings.mediaHelpers.createMicrophoneStream({
+//     echoCancellation: true,
+//     noiseSuppression: true,
+//   });
+
+//   cameraStream = await webexService.meetings.mediaHelpers.createCameraStream({ width: 640, height: 480 });
+//   document.getElementById('self-view').srcObject= cameraStream.outputStream;
+
+//   const meetingOptions = {
+//     mediaOptions: {
+//       allowMediaInLobby: true,
+//       shareAudioEnabled: false,
+//       shareVideoEnabled: false,
+//       localStreams:{
+//         camera: cameraStream,
+//         microphone: microphoneStream
+//       },      
+//     },
+//   };
+//   await meeting.joinWithMedia(meetingOptions);
+// } 
+
+// async function inviteUser(userType, userAddress){
+//   try{
+//     let payload = {"host":agentDetails.emails[0]}
+//     let meetingResp = await fetch(`/meeting`, {
+//       method: 'POST',
+//       headers: {
+//           'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify(payload)
+//     });
+//     let meeting = await meetingResp.json();
+//     customLog('inviteUser meetingResp:');
+//     customLog(meeting);
+//     if(meeting.success){
+//       delete meeting.success;
+//       meeting.name = agentDetails.displayName;
+//       let resp = await sendCommandMessage("meeting", userType, userAddress, meeting);
+//       let createPromise = webexService.meetings.create(meeting.destination);
+//       let jresp = await resp.json();
+//       customLog('inviteUser jresp:');
+//       customLog(jresp);
+//       if(jresp.success){
+//         let that = this;
+//         if(jresp.user && jresp.user.guest_id){
+//           currentUserId = jresp.user.guest_id;
+//           currentUserSDKId = atob(currentUserId).split("/").slice(-1)[0];
+//         }
+//         createPromise.then(async(meeting) => {
+//           currentMeeting = meeting;
+//           customLog("created a meeting:");
+//           customLog(currentMeeting);
+//           bindMeetingEvents(currentMeeting);
+//           clearTimeout(ringingCallTimeout);
+//           //myAsyncRingingTimeout(that, 20000);
+//           ringingCallTimeout = setTimeout(() => {
+//             that.endMeeting();
+//             that.showCallReady("Call timed out, no answer.", "red");
+//           }, 30000);
+//           return joinMeeting(currentMeeting);
+//         }).catch((error) => {
+//           customLog("Meeting createPromise failure:");
+//           customLog(error);
+//         });
+//         showCallActive();
+//         customLog("successful invite sent.");
+//         updateResultSpan(`User ${userAddress} invited to meeting.`, "green");
+//       } else {
+//         updateResultSpan(`User not found for ${userAddress}.`, "red");
+//       }
+//     } else {
+//       updateResultSpan(`Failed to create the meeting.`, "red");
+//     }
+//   } catch(e){
+//     updateResultSpan(`Something went wrong trying to invite user.`, "red");
+//   }
+// }
+
+// async function inviteToMeeting(){
+//   try{
+//       const selectedInviteeType = document.querySelector('input[name="invitee-radio"]:checked');
+//       if (selectedInviteeType) {
+//         const inviteeTypeValue = selectedInviteeType.value;
+//         if(inviteeTypeValue === "invitee-email"){
+//           let emailAddress = document.getElementById("invitee-email-input").value;
+//           await inviteUser("email", emailAddress);
+//         } else {
+//           let phoneNumber = document.getElementById("invitee-number-input").value;
+//           phoneNumber = replaceAll(phoneNumber,"+","");
+//           customLog('phoneNumber:', phoneNumber);
+//           await inviteUser("number", phoneNumber);
+//         }
+//       } else {
+//         updateResultSpan(`Either email or phone number must be selected and entered.`, "red");
+//       }
+//   } catch(e){
+//     customLog("inviteToMeeting Failure:");
+//     customLog(e);
+//     updateResultSpan("Invite to meeting failed.", "red");
+//   }
+//   startResetCallTimeout();
+// }
+
+
+// async function endMeeting(){
+//   try{
+//     clearTimeout(ringingCallTimeout);
+//     document.getElementById("remote-view-video").style.display = 'none';
+//     currentMeeting.endMeetingForAll();
+//     let resp = await sendCommandMessage("ended", "to", currentUserId);
+//     customLog("endMeeting ended command resp:");
+//     let jresp = await resp.json();
+//     customLog(jresp);
+//   } catch (e){
+//     customLog("An error occurred in endMeeting:");
+//     customLog(e);
+//   }
+//   customLog(currentMeeting);
+//   currentMeeting = null;
+//   currentMeetingAccepted = false;
+//   try{
+//     microphoneStream.stop();
+//   } catch (e){
+//     customLog('could not stop microphoneStream:');
+//     customLog(e);
+//   }
+//   try{
+//     cameraStream.stop();
+//   } catch (e){
+//     customLog('could not stop cameraStream:');
+//     customLog(e);
+//   }
+// }
+
+// function connectedCallback() {
+//   try{
+//       customLog("myINIT webexService", webexService);
+      
+//       webexService.fetchPersonData("me").then(resp => {
+//         customLog('webex.fetchPersonData("me")', resp);
+//         agentDetails = resp;
+//       });
+      
+//       //customLog(`access_token:${Cookies.get('access_token')}`);
+//       loadContent();
+
+//       webexService.messages.listen().then(() => {
+//         customLog('listening to message events');
+//         webexService.messages.on('created', async (event) => {
+//           customLog(`Got a message:created event:`);
+//           customLog(event);
+//           customLog(`currentUserId:${currentUserId}`);
+//           customLog(`event.actorId:${event.actorId}`);
+//           customLog(event.actorId === currentUserId);
+//           customLog(event.actorId == currentUserId);
+//           if(event.data.personEmail === "wxcc-app-dialer@webex.bot" || event.actorId === currentUserId){
+//             customLog("parsing message")
+//             try{
+//               let command = JSON.parse(event.data.text);
+//               customLog(command);
+//               let keyCommand = command.command.toLowerCase();
+//               customLog(keyCommand);
+//               if(currentMeeting && !currentMeetingAccepted){
+//                 customLog('currentMeeting:');
+//                 customLog(currentMeeting);
+//                 customLog('currentMeetingAccepted:', currentMeetingAccepted);
+//                 if(["rejected", "declined"].indexOf(keyCommand) >= 0){
+//                   clearTimeout(ringingCallTimeout);
+//                   customLog('currentMeeting declined/rejected - ending meeting.');
+//                   await endMeeting();
+//                   showCallReady(`Call was ${keyCommand} by user.`, 'red');
+//                   startResetCallTimeout();
+//                 } else if("accepted" === keyCommand){
+//                   clearTimeout(ringingCallTimeout);
+//                   customLog('currentMeeting accepted.');
+//                   updateResultSpan(`Call was ${keyCommand} by user.`, 'green');
+//                   document.getElementById("call-span").innerText = "Connecting...";
+//                   currentMeetingAccepted = true;
+//                   startResetCallTimeout();
+//                 } else if("ended" === keyCommand){
+//                   clearTimeout(ringingCallTimeout);
+//                   customLog('currentMeeting ended by user.');
+//                   await endMeeting();
+//                   showCallReady(`Call was ${keyCommand} by user.`, 'green');
+//                   startResetCallTimeout();
+//                 }
+//               }
+//             } catch(e){
+//               customLog("webex.messages.on error:");
+//               customLog(e);
+//             }
+//           }
+//           return null;
+//         });
+//       });
+
+//       webexService.meetings.register().then(res => {
+//         customLog("webexService.meetings.register() done!");
+//       });
+
+//       customLog("loaded = true");
+//   }catch(e){
+//     customLog('connectedCallback error', e);
+//     setTimeout( connectedCallback, 3000);
+//   }
+// }
+    </script>
+  </body>
+</html>
+

@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: default
+  name: call
+spec:
+  selector:
+    matchLabels:
+      app: call
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: call
+    spec:
+      containers:
+      - image: 191518685251.dkr.ecr.us-west-1.amazonaws.com/call:latest
+        imagePullPolicy: Always
+        name: call
+        ports:
+        - containerPort: 10031
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: default
+  name: call-service
+spec:
+  ports:
+    - port: 80
+      targetPort: 10031
+      protocol: TCP
+  type: NodePort
+  selector:
+    app: call
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: default
+  name: call-ingress
+  annotations:
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/certificate-arn:     arn:aws:acm:us-west-1:191518685251:certificate/675d3754-6884-4f17-b014-f3bbe591540c
+    alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+spec:
+  ingressClassName: alb
+  rules:
+    - http:
+        paths:
+          - path: /*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: ssl-redirect
+                port:
+                  name: use-annotation
+          - path: /*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: call-service
+                port:
+                  number: 80
