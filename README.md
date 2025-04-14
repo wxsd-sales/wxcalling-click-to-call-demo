@@ -3,7 +3,7 @@
 A Webapp to demo Guest Calling with Webex.
 
 ## Demo
-[![Vidcast Overview]()](https://app.vidcast.io/share/e10b0087-68df-49d4-a730-38b9fc8b71c3)
+[![Vidcast Overview](https://github.com/user-attachments/assets/7a2d1da8-8c55-4441-aef9-500077c203dc)](https://app.vidcast.io/share/e10b0087-68df-49d4-a730-38b9fc8b71c3)
 
 
 ## Getting Started
