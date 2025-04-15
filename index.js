@@ -23,29 +23,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
 
-// function replaceAll(string, search, replace) {
-//   return string.split(search).join(replace);
-// }
-
-// function isValidAddress(address, text){
-//   let isValid = true;
-//   if(address.length >= 3 && address.indexOf("@") > 0 && address.indexOf("@") < address.length - 1){
-//     //console.log(`isValidAddress - ${text} address valid`);
-//   } else {
-//     isValid = false;
-//     this.updateResultSpan(`${text} address entered is invalid.`, "red");
-//   }
-//   console.log(`isValidAddress - ${text}:${address}`);
-//   return isValid;
-// }
-
-// function isValidNumber(str){
-//   if(str.length >= 4){
-//     return /^\d+$/.test(str);
-//   }
-//   return false;
-// }
-
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
